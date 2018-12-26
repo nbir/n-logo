@@ -2,18 +2,18 @@ A simple python script to generate my personal logo. Width, height, padding and 
 
 ## Install
 
-Install Pillow (TODO)
+- `brew install pipenv` - install python package/virtual environment manager
 
 ## Usage
 
 ```
-  python main.py [-h] [-p [PADDING]] [-b [{black,white}]] [-v] width height
+  pipenv run python main.py [-h] [-p [PADDING]] [-b [{black,white}]] [-v] width height
 ```
 
 e.g.
 
 ```
-  python main.py -p 100 -b white -v 600 400
+  pipenv run python main.py -p 100 -b white -v 600 400
 ```
 
 Arguments:
