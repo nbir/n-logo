@@ -41,7 +41,7 @@ def get_transform_params(width, height, target_width, target_height):
     return (1, 0, -x_offset, 0, 1, -y_offset)
 
 
-def generate(width, height, padding=0):
+def generate(width, height, padding=0, preview=False):
     (target_width, target_height) = get_target_dimensions(
         width, height, padding)
 
@@ -61,16 +61,33 @@ def generate(width, height, padding=0):
 
     img = img.transform(img.size, Image.AFFINE, transform_params)
 
-    img.save('logo.png', format='png')
+    if preview:
+        img.show('N. Logo')
+    else:
+        img.save('logo.png', format='png')
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Generate N. Logo')
+    parser = argparse.ArgumentParser(
+        description='Generate N. Logo and save to file logo.png')
 
-    parser.add_argument('width', type=int, help='Width of output file')
-    parser.add_argument('height', type=int, help='Height of output file')
-    parser.add_argument('--padding', type=int, help='Padding on all sides')
+    parser.add_argument(
+        'width', type=int, help='Width of output file in pixels')
+    parser.add_argument(
+        'height', type=int, help='Height of output file in pixels')
+    parser.add_argument(
+        '-p',
+        '--padding',
+        nargs='?',
+        default=0,
+        type=int,
+        help='Padding on all sides in pixels')
+    parser.add_argument(
+        '-v',
+        '--preview',
+        action='store_true',
+        help='Preview logo instead of saving to file')
 
     args = parser.parse_args()
 
-    generate(args.width, args.height, args.padding)
+    generate(args.width, args.height, args.padding, args.preview)
