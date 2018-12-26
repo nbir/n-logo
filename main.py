@@ -10,8 +10,8 @@ WIDTH = 9
 HEIGHT = 6
 ASPECT_RATIO = WIDTH / HEIGHT
 
-BACKGROUND_COLOR = 'black'
-FOREGROUND_COLOR = 'white'
+COLOR_BLACK = 'black'
+COLOR_WHITE = 'white'
 
 
 def get_target_dimensions(width, height, padding):
@@ -41,7 +41,7 @@ def get_transform_params(width, height, target_width, target_height):
     return (1, 0, -x_offset, 0, 1, -y_offset)
 
 
-def generate(width, height, padding=0, preview=False):
+def generate(width, height, padding, bgcolor, preview=False):
     (target_width, target_height) = get_target_dimensions(
         width, height, padding)
 
@@ -50,16 +50,18 @@ def generate(width, height, padding=0, preview=False):
     letter_vertices = scale_vertices(LETTER_VERTICES, scale)
     period_vertices = scale_vertices(PERIOD_VERTICES, scale)
 
-    img = Image.new('1', (width, height), color=BACKGROUND_COLOR)
+    img = Image.new('1', (width, height), color=bgcolor)
+
+    fgcolor = COLOR_WHITE if bgcolor == COLOR_BLACK else COLOR_BLACK
 
     draw = ImageDraw.Draw(img)
-    draw.polygon(letter_vertices, fill=FOREGROUND_COLOR)
-    draw.polygon(period_vertices, fill=FOREGROUND_COLOR)
+    draw.polygon(letter_vertices, fill=fgcolor)
+    draw.polygon(period_vertices, fill=fgcolor)
 
     transform_params = get_transform_params(width, height, target_width,
                                             target_height)
 
-    img = img.transform(img.size, Image.AFFINE, transform_params)
+    img = img.transform(img.size, Image.AFFINE, transform_params, fillcolor=bgcolor)
 
     if preview:
         img.show('N. Logo')
@@ -83,6 +85,13 @@ if __name__ == '__main__':
         type=int,
         help='Padding on all sides in pixels')
     parser.add_argument(
+        '-b',
+        '--bgcolor',
+        nargs='?',
+        default='black',
+        choices=['black', 'white'],
+        help='Background color for logo')
+    parser.add_argument(
         '-v',
         '--preview',
         action='store_true',
@@ -90,4 +99,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    generate(args.width, args.height, args.padding, args.preview)
+    generate(args.width, args.height, args.padding, args.bgcolor, args.preview)
