@@ -1,12 +1,17 @@
+import argparse
+
 from PIL import Image, ImageDraw
 
 LETTER_VERTICES = [(0, 0), (7, 0), (7, 6), (5, 6), (5, 2), (3, 2), (3, 6),
-                   (1, 6), (1, 2), (0, 2)]
-PERIOD_VERTICES = [(8, 4), (9, 4), (9, 6), (8, 6)]
+                   (1, 6), (1, 1), (0, 1)]
+PERIOD_VERTICES = [(8, 5), (9, 5), (9, 6), (8, 6)]
 
 WIDTH = 9
 HEIGHT = 6
 ASPECT_RATIO = WIDTH / HEIGHT
+
+BACKGROUND_COLOR = 'black'
+FOREGROUND_COLOR = 'white'
 
 
 def get_target_dimensions(width, height, padding):
@@ -36,7 +41,7 @@ def get_transform_params(width, height, target_width, target_height):
     return (1, 0, -x_offset, 0, 1, -y_offset)
 
 
-def generate(width, height, padding=0, bgcolor='black'):
+def generate(width, height, padding=0):
     (target_width, target_height) = get_target_dimensions(
         width, height, padding)
 
@@ -45,7 +50,7 @@ def generate(width, height, padding=0, bgcolor='black'):
     letter_vertices = scale_vertices(LETTER_VERTICES, scale)
     period_vertices = scale_vertices(PERIOD_VERTICES, scale)
 
-    img = Image.new('1', (width, height), color=bgcolor)
+    img = Image.new('1', (width, height), color=BACKGROUND_COLOR)
 
     draw = ImageDraw.Draw(img)
     draw.polygon(letter_vertices, fill=FOREGROUND_COLOR)
@@ -56,8 +61,16 @@ def generate(width, height, padding=0, bgcolor='black'):
 
     img = img.transform(img.size, Image.AFFINE, transform_params)
 
-    img.show('N Logo')
+    img.save('logo.png', format='png')
 
 
 if __name__ == '__main__':
-    generate(460, 460, 50)  # TODO: use argparse
+    parser = argparse.ArgumentParser(description='Generate N. Logo')
+
+    parser.add_argument('width', type=int, help='Width of output file')
+    parser.add_argument('height', type=int, help='Height of output file')
+    parser.add_argument('--padding', type=int, help='Padding on all sides')
+
+    args = parser.parse_args()
+
+    generate(args.width, args.height, args.padding)
