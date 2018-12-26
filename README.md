@@ -1,3 +1,5 @@
+![N. Logo](logo_100x100_20padding_white.png)
+
 A simple python script to generate my personal logo. Width, height, padding and background color are configurable.
 
 ## Install
