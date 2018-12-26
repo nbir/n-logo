@@ -61,7 +61,8 @@ def generate(width, height, padding, bgcolor, preview=False):
     transform_params = get_transform_params(width, height, target_width,
                                             target_height)
 
-    img = img.transform(img.size, Image.AFFINE, transform_params, fillcolor=bgcolor)
+    img = img.transform(
+        img.size, Image.AFFINE, transform_params, fillcolor=bgcolor)
 
     if preview:
         img.show('N. Logo')
@@ -100,3 +101,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     generate(args.width, args.height, args.padding, args.bgcolor, args.preview)
+ 
